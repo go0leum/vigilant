@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import styled from 'styled-components';
 import TopBar from '../components/TopBar';
 
@@ -71,22 +72,30 @@ const ChipGroup = styled.div`
   flex-direction: column; 
   align-items: flex-start;
   gap: 4px; 
-`; 
 
-const ChipButton = styled.button` 
-  width: 100%;
-  flex: 1; 
-  align-self: stretch;
+  /* Flexbox 추가 */ 
+  & > div { 
+    width: 100%;
+    flex: 1; 
+    align-self: stretch;
+    display: flex;
+    flex-direction: row; 
+    gap: 10px; 
+    }
+`;
+
+
+const Chip = styled.div` 
   padding: 8px 12px;
-  background: ${(props) => (props.cliked ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.05)')};
-  color: ${(props) => (props.cliked ? 'white' : 'black')};
+  background: ${(props) => (props.selected ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.05)')};
+  color: ${(props) => (props.selected ? 'white' : 'black')};
   border: none;
   border-radius: 6px; 
   cursor: pointer; 
   font-size: 14px; 
 
   &:hover { 
-    background: rgba(0, 0, 0, 0.20); 
+    background: ${(props) => (props.selected ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.20)')};
   }
   
 `;
@@ -109,51 +118,68 @@ const Button = styled.button`
   font-size: 16px;
 `;
 
+const Error = styled.span` 
+  color: red; 
+  margin-bottom: 10px; 
+  display: ${(props) => (props.visible ? 'block' : 'none')}; 
+`;
+
 const LogIn = () => {
-  const [clicked, setClicked] = useState(false);
+    const [userID, setUserID] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState('');
+    const [roleError, setRoleError] = useState(false);
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
 
-  const handleClick = () => {
-     setClicked(!clicked);
-  };
+    const handleRoleClick = (selectedRole) => { 
+        setRole(selectedRole); 
+        setRoleError(false); 
+    };
 
-  const navigate = useNavigate();
+    const navigateTo = (path) => {
+        navigate(path);
+    };
 
-  const navigateTo = (path) => {
-    navigate(path);
-  };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        await login(userID, password, role);
+        navigate('/')
+    };
 
-  return (
-    <Container>
-        <TopBar />
-        <FormContainer>
-          <Title>Log In</Title>
-          <Form>
-              <InputGroup>
-                <label>Email</label>
-                <Input type="email" placeholder="Enter your email" />
-              </InputGroup>
+    return (
+        <Container>
+            <TopBar />
+            <FormContainer>
+                <Title>Log In</Title>
+                <Form onSubmit={handleSubmit}>
+                    <InputGroup>
+                        <label>ID</label>
+                        <Input type="text" id="userID" value={userID} onChange={(e) => setUserID(e.target.value)} required placeholder="Enter your ID" />
+                    </InputGroup>
 
-              <InputGroup>
-                <label>Password</label>
-                <Input type="password" placeholder="Enter your password" />
-              </InputGroup>
+                    <InputGroup>
+                        <label>Password</label>
+                        <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter your password" />
+                    </InputGroup>
 
-              <ChipGroup>
-                <label>Job Type</label>
-                <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                    <ChipButton cliked={clicked} onClick={handleClick} className='accountType'>Worker</ChipButton>
-                    <ChipButton cliked={clicked} onClick={handleClick} className='accountType'>Manager</ChipButton>
-                </div>
-              </ChipGroup>
+                    <ChipGroup>
+                        <label>Job Type</label>
+                        <div>
+                            <Chip selected={role === "manager"} onClick={() => handleRoleClick('manager')}>Manager</Chip>
+                            <Chip selected={role === "worker"} onClick={() => handleRoleClick('worker')}>Worker</Chip>
+                        </div>
+                    </ChipGroup>
+                    <Error visible={roleError}> Please select a role. </Error>
 
-              <ButtonGroup>
-                <Button onClick={() => navigateTo('/signUp')}>Sign Up</Button>
-                <Button primary onClick={() => navigateTo('/managerHome')}>Log In</Button>
-              </ButtonGroup>
-          </Form>
-        </FormContainer>
-    </Container>
-  );
+                    <ButtonGroup>
+                        <Button onClick={() => navigateTo('/signUp')}>Sign Up</Button>
+                        <Button primary type="submit">Log In</Button>
+                    </ButtonGroup>
+                </Form>
+            </FormContainer>
+        </Container>
+    );
 };
 
 export default LogIn;
