@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import React from 'react';
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   background: white;
   display: flex;
   width: 100%;
@@ -10,12 +9,8 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const About = () => {
-  return (
-    <Container>
-      ManagerHome
-    </Container>
-  );
-};
+const BaseContainer = ({ children }) => { 
+    return <StyledContainer>{children}</StyledContainer>; 
+}; 
 
-export default About;
+export default BaseContainer;

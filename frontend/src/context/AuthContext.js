@@ -1,47 +1,64 @@
 // src/context/AuthContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import axios from 'axios';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+const AuthProvider = ({ children }) => {
+  const [formData, setFormData] = useState({
+    userID: '',
+    password: '',
+    role: '',
+  });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const savedUser = JSON.parse(localStorage.getItem('user'));
-      if (savedUser) {
-        setUser(savedUser);
+  const [errors, setErrors] = useState({
+    userID: false,
+    password: false,
+    role: false,
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+    setErrors({ ...errors, [id]: value === '' });
+  };
+
+  const handleRoleClick = (selectedRole) => {
+    setFormData({ ...formData, role: selectedRole });
+    setErrors({ ...errors, role: false });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.userID && formData.password && formData.role) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/login/', {
+          userID: formData.userID,
+          password: formData.password,
+          role: formData.role,
+        });
+        alert(response.data.message);
+      } catch (error) {
+        alert('Error: ' + error.response.data.error);
       }
-      setLoading(false);
-    };
-    fetchUser();
-  }, []);
-
-  const login = async (userID, password, role) => {
-    try {
-      const response = await axios.post('http://localhost:8000/api/token/', {
-        userID,
-        password,
-        role,
-      });
-      const userData = { userID, role, token: response.data.access };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Login failed', error);
+    } else {
+      alert('Please fill out all fields.');
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        formData,
+        errors,
+        handleChange,
+        handleRoleClick,
+        handleSubmit,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext, AuthProvider };

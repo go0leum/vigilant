@@ -68,7 +68,7 @@ const TopBar = () => {
       <Logo />
       <Title>vigilant</Title>
       <Navigation>
-        <NavigationButton onClick={() => navigateTo('/login')}>Log In</NavigationButton>
+        <NavigationButton onClick={() => navigateTo('/logIn')}>Log In</NavigationButton>
         <NavigationButton onClick={() => navigateTo('/about')}>About</NavigationButton>
         <SearchInput type="search-text" placeholder="Search in site"/>
       </Navigation>

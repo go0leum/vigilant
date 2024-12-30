@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import TopBar from '../components/TopBar';
 
 const Container = styled.div`
   background: white;
@@ -12,11 +11,11 @@ const Container = styled.div`
 `;
 
 const About = () => {
-    return (
-        <Container>
-            About
-        </Container>
-    );
+  return (
+    <Container>
+      About
+    </Container>
+  );
 };
 
 export default About;

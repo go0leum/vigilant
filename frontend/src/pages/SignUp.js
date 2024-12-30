@@ -1,202 +1,59 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import TopBar from '../components/TopBar';
+import React, { useContext } from 'react';
+import { SignUpContext, SignUpProvider } from '../context/SingUpContext';
 
-const Container = styled.div`
-  background: white;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-`;
+import TopBar from '../components/layout/TopBar';
+import BaseContainer from '../components/layout/BaseContainer';
+import FormContainer from '../components/layout/FormContainer';
+import ChipContainer from '../components/layout/ChipContainer';
 
-const FormContainer = styled.div`
-  width: 100%;
-  max-width: 100vw;
-  height: 100%;
-  max-height: 100vh;
-  padding: 170px 170px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 60px 60px;
-  box-sizing: border-box;
-`;
+import Form from '../components/common/Form'
+import Button from '../components/common/Button'
+import Chip from '../components/common/Chip'
+import Error from '../components/common/Error'
+import Input from '../components/common/Input'
 
-const Title = styled.h1`
-  width: 40%;
-  height: 100%;
-  font-size: 32px;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-`;
+const SignUpForm = () => {
+  const { formData, errors, handleChange, handlePasswordChange, handleConfirmPasswordChange, handleRoleClick, handleSubmit, } = useContext(SignUpContext);
 
-const Form = styled.form`
-  width: 40%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  box-sizing: border-box;
-`;
+  return (
+    <BaseContainer>
+      <TopBar />
+      <FormContainer flexDirection="row" title="Sign Up">
+        <Form onSubmit={handleSubmit}>
 
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  width: 100%;
-`;
+          <Input label="Name" id="userName" type="name" value={formData.userName} onChange={handleChange} required placeholder="Enter your name"></Input>
+          <Error visible={errors.userName}>Name is required.</Error>
 
-const Input = styled.input`
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  border-radius: 6px;
-`;
+          <Input label="Phone Number" id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} required placeholder="Enter your phone number"></Input>
+          <Error visible={errors.phoneNumber}>Phone number is required.</Error>
 
-const Error = styled.span` 
-  color: red; 
-  margin-bottom: 10px; 
-  display: ${(props) => (props.visible ? 'block' : 'none')}; 
-`;
+          <Input label="ID" id="userID" type="text" value={formData.userID} onChange={handleChange} required placeholder="Enter your ID"></Input>
+          <Error visible={errors.userID}>ID is required.</Error>
 
-const ChipGroup = styled.div` 
-  width: 100%;
-  display: flex; 
-  flex-direction: column; 
-  align-items: flex-start;
-  gap: 4px; 
+          <Input label="Password" type="password" id="password" value={formData.password} onChange={handlePasswordChange} required placeholder="Enter password"></Input>
+          <Error visible={errors.password}> Password must be at least 8 characters long and include a mix of uppercase letters, lowercase letters, numbers, and special characters. </Error>
 
-  /* Flexbox 추가 */ 
-  & > div { 
-    width: 100%;
-    flex: 1; 
-    align-self: stretch;
-    display: flex;
-    flex-direction: row; 
-    gap: 10px; 
-    }
-`;
+          <Input label="Confirm Password" id="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleConfirmPasswordChange} required placeholder="Enter password again"></Input>
+          <Error visible={errors.confirmPassword}> Password do not match. </Error>
 
-const Chip = styled.div` 
-  padding: 8px 12px;
-  background: ${(props) => (props.selected ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.05)')};
-  color: ${(props) => (props.selected ? 'white' : 'black')};
-  border: none;
-  border-radius: 6px; 
-  cursor: pointer; 
-  font-size: 14px; 
+          <ChipContainer label="Job Type">
+            <Chip label="Manager" selected={formData.role === "manager"} onClick={() => handleRoleClick('manager')}></Chip>
+            <Chip label="Woker" selected={formData.role === "worker"} onClick={() => handleRoleClick('worker')}></Chip>
+          </ChipContainer>
+          <Error visible={errors.role}> Please select a role. </Error>
 
-  &:hover { 
-    background: ${(props) => (props.selected ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.20)')};
-  }
-  
-`;
+          <Button label="Create Account" primary type="submit"></Button>
 
-const Button = styled.button`
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid black;
-  background: ${(props) => (props.primary ? 'black' : 'white')};
-  color: ${(props) => (props.primary ? 'white' : 'black')};
-  font-size: 16px;
-`;
+        </Form>
+      </FormContainer>
+    </BaseContainer>
+  );
+};
 
 const SignUp = () => {
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-    const [role, setRole] = useState('');
-    const [roleError, setRoleError] = useState(false);
-
-    const handlePasswordChange = (event) => {
-        const newPassword = event.target.value;
-        setPassword(newPassword);
-
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        setPasswordError(!passwordPattern.test(newPassword));
-    };
-
-    const handleConfirmPasswordChange = (event) => {
-        const newConfirmPassword = event.target.value;
-        setConfirmPassword(newConfirmPassword);
-        setConfirmPasswordError(newConfirmPassword !== password);
-    };
-
-    const handleRoleClick = (selectedRole) => { 
-        setRole(selectedRole); 
-        setRoleError(false); 
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (passwordPattern.test(password) && password === confirmPassword) {
-            alert('Password is valid and matches!');
-        } else {
-            if (!passwordPattern.test(password)) {
-                alert('Password does not meet the requirements.');
-            } else {
-                alert('Passwords do not match.');
-            }
-        }
-    };
-
-    const navigate = useNavigate();
-
-    const navigateTo = (path) => {
-        navigate(path);
-    };
-
-    return (
-        <Container>
-            <TopBar />
-            <FormContainer>
-                <Title>Sign Up</Title>
-                <Form>
-                    <InputGroup>
-                        <label>Name</label>
-                        <Input type="name" id="name" required placeholder="Enter your name" />
-                    </InputGroup>
-                    <InputGroup>
-                        <label>Phone Number</label>
-                        <Input type="tel" id="phoneNumber" required placeholder="Enter your phone number" />
-                    </InputGroup>
-                    <InputGroup>
-                        <label>ID</label>
-                        <Input type="text" id="userID" required placeholder="Enter your ID" />
-                    </InputGroup>
-                    <InputGroup>
-                        <label>Password</label>
-                        <Input type="password" id="password" value={password} onChange={handlePasswordChange} required placeholder="Enter your password" />
-                        <Error visible={passwordError}>Password must be at least 8 characters long and include a mix of uppercase letters, lowercase letters, numbers, and special characters.</Error>
-                        <Input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} required placeholder="Enter your password" />
-                        <Error visible={confirmPasswordError}>Password do not match.</Error>
-                    </InputGroup>
-
-                    <ChipGroup>
-                        <label>Job Type</label>
-                        <div>
-                            <Chip selected={role === "manager"} onClick={() => handleRoleClick('manager')}>Manager</Chip>
-                            <Chip selected={role === "worker"} onClick={() => handleRoleClick('worker')}>Worker</Chip>
-                        </div>
-                    </ChipGroup>
-                    <Error visible={roleError}> Please select a role. </Error>
-
-                    <Button primary type="submit" onClick={() => navigateTo('/logIn')}>Create Account</Button>
-                </Form>
-            </FormContainer>
-        </Container>
-    );
+  return (
+    <SignUpProvider> <SignUpForm /> </SignUpProvider>
+  );
 };
 
 export default SignUp;
