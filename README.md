@@ -1,2 +1,0 @@
-# vigilant
-construction safety system
