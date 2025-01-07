@@ -38,7 +38,7 @@ const SignUpForm = () => {
 
           <ChipContainer label="Job Type">
             <Chip label="Manager" selected={formData.role === "manager"} onClick={() => handleRoleClick('manager')}></Chip>
-            <Chip label="Woker" selected={formData.role === "worker"} onClick={() => handleRoleClick('worker')}></Chip>
+            <Chip label="Worker" selected={formData.role === "worker"} onClick={() => handleRoleClick('worker')}></Chip>
           </ChipContainer>
           <Error visible={errors.role}> Please select a role. </Error>
 
