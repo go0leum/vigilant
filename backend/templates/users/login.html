@@ -11,9 +11,14 @@
   </div>
   <div>
     <label>비밀번호</label>
-    <input type="text" name="password" id="password">
+    <input type="password" name="password" id="password">
   </div>
   <button type="submit">로그인</button>
 </form>
+
+<!-- 회원가입 버튼 추가 -->
+<div>
+  <p>계정이 없으신가요? <a href="{% url 'users:join' %}">회원가입</a></p>
+</div>
 
 {% endblock %}
