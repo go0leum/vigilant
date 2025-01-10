@@ -5,15 +5,21 @@ import TopBar from '../components/layout/TopBar';
 import BaseContainer from '../components/layout/BaseContainer';
 import FormContainer from '../components/layout/FormContainer';
 import ChipContainer from '../components/layout/ChipContainer';
+import DropdownContainer from '../components/layout/ChipContainer';
 
 import Form from '../components/common/Form'
 import Button from '../components/common/Button'
 import Chip from '../components/common/Chip'
 import Error from '../components/common/Error'
 import Input from '../components/common/Input'
+import Dropdown from '../components/common/Dropdown';
+
+const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i); 
+const months = Array.from({ length: 12 }, (_, i) => i + 1); 
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
 const SignUpForm = () => {
-  const { formData, errors, handleChange, handlePasswordChange, handleConfirmPasswordChange, handleRoleClick, handleSubmit, } = useContext(SignUpContext);
+  const { formData, errors, handleChange, handleDateChange, handlePasswordChange, handleConfirmPasswordChange, handleRoleClick, handleSubmit, } = useContext(SignUpContext);
 
   return (
     <BaseContainer>
@@ -23,6 +29,12 @@ const SignUpForm = () => {
 
           <Input label="Name" id="userName" type="name" value={formData.userName} onChange={handleChange} required placeholder="Enter your name"></Input>
           <Error visible={errors.userName}>Name is required.</Error>
+
+          <DropdownContainer label="Date of Birth">
+            <Dropdown label="year" id="birthYear" options={years} value={formData.birthYear} onChange={handleDateChange} required placeholder="Year"></Dropdown>
+            <Dropdown label="month" id="birthMonth" options={months} value={formData.birthMonth} onChange={handleDateChange} required placeholder="Month"></Dropdown>
+            <Dropdown label="day" id="birthDay" options={days} value={formData.birthDay} onChange={handleDateChange} required placeholder="Day"></Dropdown>
+          </DropdownContainer>
 
           <Input label="Phone Number" id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} required placeholder="Enter your phone number"></Input>
           <Error visible={errors.phoneNumber}>Phone number is required.</Error>
