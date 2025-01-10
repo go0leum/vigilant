@@ -9,6 +9,9 @@ const SignUpProvider = ({ children }) => {
   const [formData, setFormData] = useState({
     userName: '',
     phoneNumber: '',
+    birthYear: '', 
+    birthMonth: '', 
+    birthDay: '',
     userID: '',
     password: '',
     confirmPassword: '',
@@ -22,6 +25,7 @@ const SignUpProvider = ({ children }) => {
     password: false,
     confirmPassword: false,
     role: false,
+    birthDate: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,6 +35,12 @@ const SignUpProvider = ({ children }) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
     setErrors({ ...errors, [id]: value === '' });
+  };
+
+  const handleDateChange = (e) => { 
+    const { id, value } = e.target; 
+    setFormData({ ...formData, [id]: value }); 
+    setErrors({ ...errors, birthDate: !formData.birthYear || !formData.birthMonth || !formData.birthDay }); 
   };
 
   const handlePasswordChange = (e) => {
@@ -57,6 +67,9 @@ const SignUpProvider = ({ children }) => {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (
       formData.userName &&
+      formData.birthYear && 
+      formData.birthMonth && 
+      formData.birthDay &&
       formData.phoneNumber &&
       formData.userID &&
       passwordPattern.test(formData.password) &&
@@ -66,6 +79,7 @@ const SignUpProvider = ({ children }) => {
       try {
         const response = await axios.post('http://your-django-api-url/register', {
           userName: formData.userName,
+          birthDate: `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
           phoneNumber: formData.phoneNumber,
           userID: formData.userID,
           password: formData.password,
@@ -89,6 +103,7 @@ const SignUpProvider = ({ children }) => {
         loading,
         message,
         handleChange,
+        handleDateChange,
         handlePasswordChange,
         handleConfirmPasswordChange,
         handleRoleClick,

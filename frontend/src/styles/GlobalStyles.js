@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
   input:focus, button:focus, select:focus, textarea:focus {
     outline: none; /* 기본 포커스 아웃라인 제거 */ 
     }
+
 `;
 
 export default GlobalStyles;
