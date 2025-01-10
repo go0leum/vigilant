@@ -13,6 +13,7 @@ import Chip from '../components/common/Chip'
 import Error from '../components/common/Error'
 import Input from '../components/common/Input'
 import Dropdown from '../components/common/Dropdown';
+import NavigationButton from '../components/common/NavigationButton';
 
 const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i); 
 const months = Array.from({ length: 12 }, (_, i) => i + 1); 
@@ -23,7 +24,10 @@ const SignUpForm = () => {
 
   return (
     <BaseContainer>
-      <TopBar />
+      <TopBar>
+        <NavigationButton label="LogIn" path="/LogIn"></NavigationButton>
+        <NavigationButton label="About" path="/About"></NavigationButton>
+      </TopBar>
       <FormContainer flexDirection="row" title="Sign Up">
         <Form onSubmit={handleSubmit}>
 

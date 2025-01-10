@@ -1,8 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const TopBarContainer = styled.div`
+  position: fixed;
   width: 100%;
   max-width: 100vw;
   height: 80px;
@@ -39,13 +39,6 @@ const Navigation = styled.div`
   margin-left: auto;
 `;
 
-const NavigationButton = styled.button`
-  font-size: 16px;
-  line-height: 24px;
-  border: none;
-  background: none;
-`;
-
 const SearchInput = styled.input`
   width: 200px;
   padding: 8px;
@@ -56,20 +49,13 @@ const SearchInput = styled.input`
   color: rgba(0, 0, 0, 0.50);
 `;
 
-const TopBar = () => {
-  const navigate = useNavigate();
-
-  const navigateTo = (path) => {
-    navigate(path);
-  };
-
+const TopBar = ({children}) => {
   return(
     <TopBarContainer>
       <Logo />
       <Title>vigilant</Title>
       <Navigation>
-        <NavigationButton onClick={() => navigateTo('/logIn')}>Log In</NavigationButton>
-        <NavigationButton onClick={() => navigateTo('/about')}>About</NavigationButton>
+        {children}
         <SearchInput type="search-text" placeholder="Search in site"/>
       </Navigation>
     </TopBarContainer>
