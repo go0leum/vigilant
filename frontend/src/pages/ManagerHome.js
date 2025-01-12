@@ -1,21 +1,26 @@
-import styled from 'styled-components';
-import React from 'react';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
-const Container = styled.div`
-  background: white;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-`;
+import TopBar from '../components/layout/TopBar';
+import BaseContainer from '../components/layout/BaseContainer';
+import UserInfo from '../components/layout/UserInfo';
+import SectionContainer from '../components/layout/SectionContainer';
 
-const About = () => {
+import NavigationButton from '../components/common/NavigationButton';
+
+const ManagerHome = () => {
   return (
-    <Container>
-      ManagerHome
-    </Container>
+    <BaseContainer>
+      <TopBar>
+        <NavigationButton label="Home" path="/ManagerHome"></NavigationButton>
+      </TopBar> 
+      <UserInfo/>
+      <SectionContainer flexDirection="column" title="Projects">
+
+      </SectionContainer>
+    </BaseContainer>
   );
 };
 
-export default About;
+export default ManagerHome;
