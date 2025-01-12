@@ -13,6 +13,7 @@ import Chip from '../components/common/Chip'
 import Error from '../components/common/Error'
 import Input from '../components/common/Input'
 import Form from '../components/common/Form'
+import NavigationButton from '../components/common/NavigationButton';
 
 const LogIn = () => {
 
@@ -25,7 +26,10 @@ const LogIn = () => {
 
   return (
     <BaseContainer>
-      <TopBar />
+      <TopBar>
+        <NavigationButton label="LogIn" path="/LogIn"></NavigationButton>
+        <NavigationButton label="About" path="/About"></NavigationButton>
+      </TopBar>
       <FormContainer flexDirection="row" title="Log In">
         <Form onSubmit={handleSubmit}>
           <Input label="ID" id="userID" type="text" value={formData.userID} onChange={handleChange} required placeholder="Enter your ID"></Input>

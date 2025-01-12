@@ -8,19 +8,19 @@ import About from './pages/About';
 import ManagerHome from './pages/ManagerHome';
 
 const App = () => {
-    return (
-        <AuthProvider>
-            <Router>
-                <GlobalStyles />
-                <Routes>
-                    <Route path="/logIn" element={<LogIn />} />
-                    <Route path="/signUp" element={<SignUp />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/managerHome" element={<ManagerHome />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
+  return (
+    <Router>
+      <AuthProvider>
+        <GlobalStyles />
+        <Routes>
+          <Route path="/logIn" element={<LogIn />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/managerHome" element={<ManagerHome />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
 };
 
 export default App;
